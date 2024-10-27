@@ -64,7 +64,7 @@ function AddTransferDialog({ size }: AddTransferDialogProps) {
                         {isLoading ? (
                             <>
                                 <Loader2 size={20} className='animate-spin' />
-                                'Guardando...'
+                                {'Guardando...'}
                             </>
                         ) : 'Guardar'}
                     </Button>
