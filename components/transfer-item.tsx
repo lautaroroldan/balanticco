@@ -1,8 +1,8 @@
 import React from 'react'
 
-type TransferType = 'income' | 'expense'
+export type TransferType = 'income' | 'expense'
 
-interface TransferItemProps {
+export interface TransferItemProps {
   title: string;
   date: string;
   amount: string
