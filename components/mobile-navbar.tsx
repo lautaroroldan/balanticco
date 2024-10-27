@@ -19,8 +19,8 @@ function MobileNavbar() {
 
     const size = 30
     return (
-        <footer className='fixed bottom-0 bg-white pt-3 pb-2 mb-4 rounded-full drop-shadow-lg w-[350px]'>
-            <nav className='flex justify-between items-center px-5'>
+        <footer className='fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-white rounded-full drop-shadow-lg w-[350px] mb-4'>
+            <nav className='flex justify-between items-center px-5 pt-3 pb-2'>
                 <Link href='/dashboard'>
                     <Home size={size} color={isActive('/dashboard') ? '#956EDB' : '#ABABAB'} />
                 </Link>
