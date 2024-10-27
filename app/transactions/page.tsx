@@ -8,7 +8,7 @@ import useTransferStore from '@/store/transfer-store'
 import Transfers from '@/components/transfers'
 import { formatDate } from '@/utils/format'
 
-function page() {
+function Page() {
     const [activeSwitch, setActiveSwitch] = useState<TransferType>('income')
     const transfers = useTransferStore((state) => state.transfers)
     const filteredTransfers = transfers.filter((transfer) => transfer.type === activeSwitch)
@@ -39,4 +39,4 @@ function page() {
     )
 }
 
-export default page
+export default Page

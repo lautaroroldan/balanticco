@@ -3,7 +3,7 @@ import React from 'react'
 import Transfers from '@/components/transfers'
 import BalanceCard from '@/components/balance-card'
 import useTransferStore from '@/store/transfer-store'
-function page() {
+function Page() {
     const transfers = useTransferStore((state) => state.transfers)
     return (
         <main className='flex flex-col gap-9'>
@@ -17,4 +17,4 @@ function page() {
     )
 }
 
-export default page
+export default Page
