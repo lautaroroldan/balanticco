@@ -1,21 +1,15 @@
 "use client"
-import { ArrowRightLeft, Home, Plus, ChartNoAxesColumn, Bolt } from 'lucide-react'
+import { ArrowRightLeft, Home, ChartNoAxesColumn, Bolt } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
+import AddTransferDialog from '@/components/add-transfer-dialog'
 
 
 function MobileNavbar() {
 
     const pathname = usePathname()
     const isActive = (path: string) => pathname === path
-    const PlusCircleIcon = () => {
-        return (
-            <div className='bg-gradient-to-r from-blue-gradient via-purple-gradient via-53% to-orange-gradient to-92% rounded-full p-1.5 flex items-center justify-center'>
-                <Plus size={size} color='#FFF' />
-            </div>
-        )
-    }
 
     const size = 30
     return (
@@ -27,9 +21,7 @@ function MobileNavbar() {
                 <Link href='/transactions'>
                     <ArrowRightLeft size={size} color={isActive('/transactions') ? '#956EDB' : '#ABABAB'} />
                 </Link>
-                <Link href='/new-transaction'>
-                    <PlusCircleIcon />
-                </Link>
+                <AddTransferDialog size={size} />
                 <Link href='/statistics'>
                     <ChartNoAxesColumn size={size} color={isActive('/statistics') ? '#956EDB' : '#ABABAB'} />
                 </Link>

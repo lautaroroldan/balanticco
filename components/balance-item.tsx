@@ -1,8 +1,9 @@
+import { formatCurrency } from '@/utils/format'
 import React from 'react'
 
 interface BalanceItemProps {
     type: 'income' | 'expense'
-    amount: string
+    amount: number
     icon: React.ReactNode
 }
 
@@ -14,7 +15,7 @@ function BalanceItem({ type, amount, icon }: BalanceItemProps) {
             {icon}
             <div className='flex flex-col'>
                 <h3 className='text-xs font-normal capitalize'>{text}</h3>
-                <h3 className='text-sm font-semibold'>{amount}</h3>
+                <h3 className='text-sm font-semibold'>{formatCurrency(amount)}</h3>
             </div>
         </div>
     )

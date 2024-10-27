@@ -1,7 +1,8 @@
 import { TransferType } from "@/components/transfer-item";
 import { create } from "zustand";
 import { v4 as uuid } from 'uuid';
-interface Transfer {
+
+export interface Transfer {
     id: string
     amount: number
     description: string
@@ -12,7 +13,7 @@ interface Transfer {
 
 interface TransferActions {
     transfers: Transfer[]
-    addTransfer: (amount: number, description: string, type: TransferType) => void
+    addTransfer: (amount: number, description: string, type: TransferType) => Promise<void>
     removeTransfer: (id: string) => void
     getTotalIncome: () => number
     getTotalExpense: () => number
@@ -57,7 +58,11 @@ const useTransferStore = create<TransferState & TransferActions>()((set, get) =>
         type: 'income',
         date: new Date('2024-10-02')
     }],
-    addTransfer: (amount, description, type) => set((state) => ({ transfers: [...state.transfers, { id: uuid(), amount, description, type, date: new Date() }] })),
+    addTransfer: async (amount, description, type) => {
+        // Agregar luego conexion a base de datos
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        set((state) => ({ transfers: [...state.transfers, { id: uuid(), amount, description, type, date: new Date() }] }))
+    },
     removeTransfer: (id) => set((state) => ({ transfers: state.transfers.filter((transfer) => transfer.id !== id) })),
     getTotalIncome: () => {
         const total = get().transfers.filter((transfer) => transfer.type === 'income').reduce((acc, transfer) => acc + transfer.amount, 0)
@@ -69,7 +74,7 @@ const useTransferStore = create<TransferState & TransferActions>()((set, get) =>
     },
     getBalance: () => get().getTotalIncome() - get().getTotalExpense(),
     getFirstTransferDate: (month, year) => {
-        const firstTransfer = get().transfers.find((transfer) => transfer.date.getMonth() + 1 >= month && transfer.date.getFullYear() === year)
+        const firstTransfer = get().transfers.sort((a, b) => a.date.getTime() - b.date.getTime()).find((transfer) => transfer.date.getMonth() + 1 >= month && transfer.date.getFullYear() === year)
         return firstTransfer?.date || new Date()
     },
     getLastTransferDate: (month, year) => {

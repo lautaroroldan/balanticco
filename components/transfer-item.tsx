@@ -1,3 +1,4 @@
+import { formatCurrency } from '@/utils/format'
 import React from 'react'
 
 export type TransferType = 'income' | 'expense'
@@ -5,7 +6,7 @@ export type TransferType = 'income' | 'expense'
 export interface TransferItemProps {
   title: string;
   date: string;
-  amount: string
+  amount: number
   type: TransferType
 }
 
@@ -24,7 +25,7 @@ function transferItem({ title, date, amount, type }: TransferItemProps) {
         </div>
       </section>
       <section>
-        <h3 className={`text-xs font-bold ${amountColor}`}>{amountSign}{amount}</h3>
+        <h3 className={`text-xs font-bold ${amountColor}`}>{amountSign}{formatCurrency(amount)}</h3>
       </section>
     </article>
   )
