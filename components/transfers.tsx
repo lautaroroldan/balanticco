@@ -1,5 +1,5 @@
 import TransferItem from '@/components/transfer-item'
-import { Transfer } from '@/app/store/transfer-store'
+import { Transfer } from '@/store/transfer-store'
 
 interface TransfersProps {
     data: Transfer[]

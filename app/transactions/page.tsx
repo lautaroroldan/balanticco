@@ -4,7 +4,7 @@ import IncomeSwitch from '@/components/income-switch'
 import TransferBalanceCard from '@/components/transfer-balance-card'
 import { TransferType } from '@/components/transfer-item'
 import React, { useState } from 'react'
-import useTransferStore from '../store/transfer-store'
+import useTransferStore from '@/store/transfer-store'
 import Transfers from '@/components/transfers'
 import { formatDate } from '@/utils/format'
 
@@ -18,7 +18,7 @@ function page() {
         <div className='mt-12'>
             <h2 className='text-base font-semibold'>Transferencias</h2>
             <BalanceCard
-                className='mt-3.5'
+                className='mt-6'
             />
             <IncomeSwitch
                 className='mt-9'

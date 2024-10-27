@@ -2,7 +2,7 @@
 import { CircleArrowDown, CircleArrowUp } from 'lucide-react'
 import React from 'react'
 import BalanceItem from '@/components/balance-item'
-import useTransferStore from '@/app/store/transfer-store'
+import useTransferStore from '@/store/transfer-store'
 import { formatCurrency, formatDate } from '@/utils/format'
 
 interface BalanceCardProps {

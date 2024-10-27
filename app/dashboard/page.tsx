@@ -2,7 +2,7 @@
 import React from 'react'
 import Transfers from '@/components/transfers'
 import BalanceCard from '@/components/balance-card'
-import useTransferStore from '../store/transfer-store'
+import useTransferStore from '@/store/transfer-store'
 function page() {
     const transfers = useTransferStore((state) => state.transfers)
     return (
