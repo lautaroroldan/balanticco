@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import MobileNavbar from "@/components/mobile-navbar";
-export const metadata: Metadata = {
-  title: "Balanticco",
-  description: "Balanticco",
-};
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Login - Balanticco",
+  description: "Página de inicio de sesión",
+};
 
 export default function RootLayout({
   children,
@@ -15,12 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
       <body
         className={`${inter.className} antialiased px-5 bg-custom-white min-h-screen relative`}
       >
         {children}
-        <MobileNavbar />
       </body>
     </html>
   );
