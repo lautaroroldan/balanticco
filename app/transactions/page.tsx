@@ -32,7 +32,7 @@ function Page() {
                 amount={filteredTransfers.reduce((acc, transfer) => acc + transfer.amount, 0)}
             />
             <Transfers
-                className='mt-5'
+                className='mt-5 max-h-[calc(100vh-48px-24px-158px-24px-52px-36px-80px-48px-20px-105px)]'
                 data={filteredTransfers}
             />
         </main>

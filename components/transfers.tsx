@@ -11,7 +11,7 @@ function Transfers({ className, showTitle = false, data }: TransfersProps) {
     return (
         <main className={`flex flex-col gap-[22px] ${className}`}>
             {showTitle && <h2 className='text-base font-semibold text-black capitalize'>Transferencias</h2>}
-            <section className='flex flex-col gap-2.5'>
+            <section className='flex flex-col gap-2.5 overflow-y-auto'>
                 {data?.map((transfer) => (
                     <TransferItem key={transfer.id} title={transfer.description} date={transfer.date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', })} amount={transfer.amount} type={transfer.type} />
                 ))}
