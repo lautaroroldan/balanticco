@@ -41,7 +41,7 @@ export function StatisticsChart({ className }: { className?: string }) {
     return (
         <Card className={className}>
             <CardHeader>
-                <CardTitle>{formatDate(firstTransferDate, { month: 'short', year: 'numeric' })} - {formatDate(lastTransferDate, { month: 'short', year: 'numeric' })}</CardTitle>
+                <CardTitle className='capitalize'>{formatDate(firstTransferDate, { month: 'short', year: 'numeric' })} - {formatDate(lastTransferDate, { month: 'short', year: 'numeric' })}</CardTitle>
             </CardHeader>
             <CardContent className="px-0 pr-8">
                 <ChartContainer config={chartConfig}>
@@ -49,6 +49,7 @@ export function StatisticsChart({ className }: { className?: string }) {
                         <CartesianGrid
                             vertical={false} />
                         <XAxis
+                            className="capitalize"
                             dataKey="month"
                             tickLine={false}
                             tickMargin={10}

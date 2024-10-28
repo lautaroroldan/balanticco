@@ -7,7 +7,7 @@ import { formatCurrency } from '@/utils/format'
 function StatisticsCardMonth({ month, balance, income, expense }: { month: string, balance: number, income: number, expense: number }) {
     return (
         <div className='rounded-2xl pt-4 px-5 pb-3 bg-white flex flex-col gap-2.5 shadow'>
-            <h3 className='text-xs font-medium'>{month}</h3>
+            <h3 className='text-xs font-medium capitalize'>{month}</h3>
             <h2 className='text-xl font-semibold mb-2'>{formatCurrency(balance)}</h2>
             <div className='flex justify-between w-full'>
                 <BalanceItem type='income' amount={income} icon={<CircleArrowUp size={30} color='#379137' />} />
