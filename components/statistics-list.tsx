@@ -8,8 +8,9 @@ function StatisticsList() {
     const balances = getBalanceForEveryMonth(new Date().getFullYear())
     return (
         <div className='flex flex-col gap-4 mt-9'>
-            {balances.map((balance) => (
+            {balances.map((balance, index) => (
                 <StatisticsCardMonth
+                    key={index}
                     month={balance.month}
                     balance={balance.income - balance.expense}
                     income={balance.income}
