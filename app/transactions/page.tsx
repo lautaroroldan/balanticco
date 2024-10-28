@@ -15,8 +15,8 @@ function Page() {
     const firstDateRange = filteredTransfers.sort((a, b) => a.date.getTime() - b.date.getTime())[0].date
     const lastDateRange = filteredTransfers.sort((a, b) => b.date.getTime() - a.date.getTime())[0].date
     return (
-        <div className='mt-12'>
-            <h2 className='text-base font-semibold'>Transferencias</h2>
+        <main className='flex flex-col'>
+            <h2 className='text-base font-semibold mt-12'>Transferencias</h2>
             <BalanceCard
                 className='mt-6'
             />
@@ -35,7 +35,7 @@ function Page() {
                 className='mt-5'
                 data={filteredTransfers}
             />
-        </div>
+        </main>
     )
 }
 

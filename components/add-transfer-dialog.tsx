@@ -38,9 +38,9 @@ function AddTransferDialog({ size }: AddTransferDialogProps) {
             </DialogTrigger>
             <DialogContent className="sm:max-w-md max-w-sm">
                 <DialogHeader>
-                    <DialogTitle className='font-semibold text-lg'>Agregar transferencia</DialogTitle>
+                    <DialogTitle className='font-semibold text-lg'>Agregar operación</DialogTitle>
                     <DialogDescription>
-                        Completa los campos para agregar una transferencia
+                        Completa los campos para agregar una operación
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
