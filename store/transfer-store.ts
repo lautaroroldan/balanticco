@@ -1,20 +1,14 @@
-import { TransferType } from "@/components/transfer-item";
+import { TransferType } from "@/app/db/schema/transfer";
 import { create } from "zustand";
 import { v4 as uuid } from 'uuid';
 import { formatDate } from "@/utils/format";
-
-export interface Transfer {
-    id: string
-    amount: number
-    description: string
-    type: TransferType
-    date: Date
-}
+import { Transfer } from "@/app/db/schema/transfer";
 
 
 interface TransferActions {
     transfers: Transfer[]
     addTransfer: (amount: number, description: string, type: TransferType) => Promise<void>
+    getTransfers: () => void
     removeTransfer: (id: string) => void
     getTotalIncome: () => number
     getTotalExpense: () => number
@@ -35,41 +29,33 @@ interface TransferState {
 }
 
 const useTransferStore = create<TransferState & TransferActions>()((set, get) => ({
-    transfers: [{
-        id: uuid(),
-        amount: 5422,
-        description: 'Otro ingreso',
-        type: 'income',
-        date: new Date('2024-10-04')
-    }, {
-        id: uuid(),
-        amount: 10,
-        description: 'Netflix',
-        type: 'expense',
-        date: new Date('2024-10-04')
-    }, {
-        id: uuid(),
-        amount: 10,
-        description: 'Amazon',
-        type: 'expense',
-        date: new Date('2024-10-22')
-    }, {
-        id: uuid(),
-        amount: 1000,
-        description: 'Comida',
-        type: 'expense',
-        date: new Date('2024-10-20')
-    }, {
-        id: uuid(),
-        amount: 10000,
-        description: 'Sueldo',
-        type: 'income',
-        date: new Date('2024-10-02')
-    }],
+    transfers: [],
     addTransfer: async (amount, description, type) => {
-        // Agregar luego conexion a base de datos
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        set((state) => ({ transfers: [...state.transfers, { id: uuid(), amount, description, type, date: new Date() }] }))
+        const transfer: Transfer = {
+            id: uuid(),
+            amount,
+            description,
+            type,
+            date: new Date()
+        }
+        try {
+            await fetch('/api/transfer', {
+                method: 'POST',
+                body: JSON.stringify(transfer)
+            })
+            set((state) => ({ transfers: [...state.transfers, transfer] }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getTransfers: async () => {
+        const transfers = await fetch('/api/transfer')
+        const transfersData = await transfers.json()
+        const transfersFormatted = transfersData.transfers.map((transfer: Transfer) => ({
+            ...transfer,
+            date: new Date(transfer.date)
+        }))
+        set(({ transfers: transfersFormatted }))
     },
     removeTransfer: (id) => set((state) => ({ transfers: state.transfers.filter((transfer) => transfer.id !== id) })),
     getTotalIncome: () => {
