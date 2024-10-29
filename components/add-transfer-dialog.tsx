@@ -4,7 +4,7 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Input } from '@/components/ui/input'
 import useTransferStore from '@/store/transfer-store'
 import CheckboxGroup from '@/components/checkbox-group'
-import { TransferType } from '@/components/transfer-item'
+import { TransferType } from '@/app/db/schema/transfer'
 import { Button } from '@/components/ui/button'
 
 interface AddTransferDialogProps {
