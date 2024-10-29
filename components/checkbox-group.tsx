@@ -1,6 +1,6 @@
 import { Checkbox } from '@/components/ui/checkbox'
 import React from 'react'
-import { TransferType } from './transfer-item'
+import { TransferType } from '@/app/db/schema/transfer'
 
 interface CheckboxGroupProps {
     value: TransferType
