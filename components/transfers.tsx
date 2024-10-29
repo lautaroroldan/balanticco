@@ -1,5 +1,5 @@
 import TransferItem from '@/components/transfer-item'
-import { Transfer } from '@/store/transfer-store'
+import { Transfer } from '@/app/db/schema/transfer'
 import { formatDate } from '@/utils/format'
 
 interface TransfersProps {

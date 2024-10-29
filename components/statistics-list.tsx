@@ -1,11 +1,11 @@
-"use client"
 import React from 'react'
 import StatisticsCardMonth from './statistics-card-month'
-import useTransferStore from '@/store/transfer-store'
+import { getBalanceForEveryMonth, getTransfers } from '@/utils/transfer'
 
-function StatisticsList() {
-    const getBalanceForEveryMonth = useTransferStore((state) => state.getBalanceForEveryMonth)
-    const balances = getBalanceForEveryMonth(new Date().getFullYear())
+async function StatisticsList() {
+    const transfers = await getTransfers()
+    const currentYear = new Date().getFullYear()
+    const balances = getBalanceForEveryMonth(transfers, currentYear)
     return (
         <div className='flex flex-col gap-4 mt-9'>
             {balances.map((balance, index) => (

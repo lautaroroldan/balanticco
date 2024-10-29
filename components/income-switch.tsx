@@ -1,4 +1,4 @@
-import { TransferType } from "./transfer-item"
+import { TransferType } from "@/app/db/schema/transfer"
 
 interface IncomeSwitchProps {
     className?: string

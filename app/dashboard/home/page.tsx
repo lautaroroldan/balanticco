@@ -1,13 +1,14 @@
-"use client"
 import React from 'react'
 import Transfers from '@/components/transfers'
 import BalanceCard from '@/components/balance-card'
-import useTransferStore from '@/store/transfer-store'
-function Page() {
-    const transfers = useTransferStore((state) => state.transfers)
+import { getTransfers } from '@/utils/transfer'
+
+async function Page() {
+    const transfers = await getTransfers()
     return (
         <main className='flex flex-col gap-9'>
             <BalanceCard
+                data={transfers}
                 className='mt-24'
             />
             <Transfers

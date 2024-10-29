@@ -1,7 +1,6 @@
+import { TransferType } from '@/app/db/schema/transfer';
 import { formatCurrency } from '@/utils/format'
 import React from 'react'
-
-export type TransferType = 'income' | 'expense'
 
 export interface TransferItemProps {
   title: string;
@@ -10,7 +9,7 @@ export interface TransferItemProps {
   type: TransferType
 }
 
-function transferItem({ title, date, amount, type }: TransferItemProps) {
+function TransferItem({ title, date, amount, type }: TransferItemProps) {
 
   const amountColor = type === 'income' ? 'text-secondary' : 'text-primary'
   const amountSign = type === 'income' ? '+' : '-'
@@ -31,4 +30,4 @@ function transferItem({ title, date, amount, type }: TransferItemProps) {
   )
 }
 
-export default transferItem
+export default TransferItem
