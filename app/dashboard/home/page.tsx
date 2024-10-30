@@ -8,7 +8,6 @@ async function Page() {
     return (
         <main className='flex flex-col gap-9'>
             <BalanceCard
-                data={transfers}
                 className='mt-24'
             />
             <Transfers

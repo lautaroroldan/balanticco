@@ -1,17 +1,15 @@
 import { CircleArrowDown, CircleArrowUp } from 'lucide-react'
 import React from 'react'
 import BalanceItem from '@/components/balance-item'
-import { Transfer } from '@/app/db/schema/transfer'
 import { formatCurrency, formatDate } from '@/utils/format'
-import { getFirstTransferDate, getLastTransferDate, getTotalExpenseByMonth, getTotalIncomeByMonth } from '@/utils/transfer'
+import { getFirstTransferDate, getLastTransferDate, getTotalExpenseByMonth, getTotalIncomeByMonth, getTransfers } from '@/utils/transfer'
 
 interface BalanceCardProps {
-    data: Transfer[]
     className?: string
 }
 
-async function BalanceCard({ data, className }: BalanceCardProps) {
-
+async function BalanceCard({ className }: BalanceCardProps) {
+    const data = await getTransfers()
     const month = new Date().getMonth() + 1
     const year = new Date().getFullYear()
 

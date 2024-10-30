@@ -9,7 +9,6 @@ async function Page() {
         <main className='flex flex-col'>
             <h2 className='text-base font-semibold mt-12'>Transferencias</h2>
             <BalanceCard
-                data={transfers}
                 className='mt-6'
             />
             <FilteredTransfers
