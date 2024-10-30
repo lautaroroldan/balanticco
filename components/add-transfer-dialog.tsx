@@ -1,8 +1,8 @@
+'use client'
 import { Loader2, Plus } from 'lucide-react'
 import React, { useState } from 'react'
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import useTransferStore from '@/store/transfer-store'
 import CheckboxGroup from '@/components/checkbox-group'
 import { TransferType } from '@/app/db/schema/transfer'
 import { Button } from '@/components/ui/button'
@@ -13,18 +13,19 @@ interface AddTransferDialogProps {
 
 function AddTransferDialog({ size }: AddTransferDialogProps) {
 
-    const addTransfer = useTransferStore((state) => state.addTransfer)
     const [transferType, setTransferType] = useState<TransferType>('income')
     const [isLoading, setIsLoading] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        console.log('submit')
         e.preventDefault()
         setIsLoading(true)
         const formData = new FormData(e.target as HTMLFormElement)
         const amount = formData.get('amount') as string
         const description = formData.get('description') as string
-        await addTransfer(Number(amount), description, transferType)
+        await fetch('/api/transfer', {
+            method: 'POST',
+            body: JSON.stringify({ amount, description, type: transferType })
+        })
         setIsLoading(false)
 
     }
