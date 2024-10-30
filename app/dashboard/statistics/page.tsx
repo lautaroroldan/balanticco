@@ -2,7 +2,7 @@
 // import StatisticsList from '@/components/statistics-list'
 // import { getTransfers } from '@/utils/transfer'
 
-async function Page() {
+export default async function Page() {
     // const transfers = await getTransfers()
     return (
         <div className='flex flex-col'>
@@ -12,5 +12,3 @@ async function Page() {
         </div>
     )
 }
-
-export default Page

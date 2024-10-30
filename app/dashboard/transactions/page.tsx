@@ -2,7 +2,7 @@ import BalanceCard from '@/components/balance-card'
 import { getTransfers } from '@/utils/transfer'
 import FilteredTransfers from '@/components/filtered-transfers'
 
-async function Page() {
+export default async function Page() {
     const transfers = await getTransfers()
 
     return (
@@ -18,4 +18,3 @@ async function Page() {
     )
 }
 
-export default Page
