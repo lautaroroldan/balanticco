@@ -1,6 +1,7 @@
 import React from 'react'
 import StatisticsCardMonth from './statistics-card-month'
-import { getBalanceForEveryMonth, getTransfers } from '@/utils/transfer'
+import { getBalanceForEveryMonth } from '@/utils/transfer'
+import { getTransfers } from '@/utils/actions'
 
 async function StatisticsList() {
     const transfers = await getTransfers()

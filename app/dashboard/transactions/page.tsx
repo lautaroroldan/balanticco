@@ -1,5 +1,5 @@
 import BalanceCard from '@/components/balance-card'
-import { getTransfers } from '@/utils/transfer'
+import { getTransfers } from '@/utils/actions'
 import FilteredTransfers from '@/components/filtered-transfers'
 
 export default async function Page() {

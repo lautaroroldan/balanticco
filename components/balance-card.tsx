@@ -2,8 +2,8 @@ import { CircleArrowDown, CircleArrowUp } from 'lucide-react'
 import React from 'react'
 import BalanceItem from '@/components/balance-item'
 import { formatCurrency, formatDate } from '@/utils/format'
-import { getFirstTransferDate, getLastTransferDate, getTotalExpenseByMonth, getTotalIncomeByMonth, getTransfers } from '@/utils/transfer'
-
+import { getFirstTransferDate, getLastTransferDate, getTotalExpenseByMonth, getTotalIncomeByMonth } from '@/utils/transfer'
+import { getTransfers } from '@/utils/actions'
 interface BalanceCardProps {
     className?: string
 }
