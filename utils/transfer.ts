@@ -10,7 +10,7 @@ export const getTransfers = cache(async () => {
         ...transfer,
         date: new Date(transfer.date)
     }))
-}, ['get-transfers'], { tags: ['get-transfers'] })
+}, ['get-transfers'], { revalidate: 3600, tags: ['get-transfers'] })
 
 export const getTotalIncome = (transfers: Transfer[]): number => {
     const total = transfers.filter((transfer) => transfer.type === 'income').reduce((acc, transfer) => acc + transfer.amount, 0);
