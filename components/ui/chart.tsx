@@ -34,7 +34,7 @@ function useChart() {
   return context
 }
 
-export const ChartContainer = React.forwardRef<
+const ChartContainer = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     config: ChartConfig
@@ -67,7 +67,7 @@ export const ChartContainer = React.forwardRef<
 })
 ChartContainer.displayName = "Chart"
 
-export const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
+const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([_, config]) => config.theme || config.color
   )
@@ -100,9 +100,9 @@ ${colorConfig
   )
 }
 
-export const ChartTooltip = RechartsPrimitive.Tooltip
+const ChartTooltip = RechartsPrimitive.Tooltip
 
-export const ChartTooltipContent = React.forwardRef<
+const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
   React.ComponentProps<"div"> & {
@@ -256,9 +256,9 @@ export const ChartTooltipContent = React.forwardRef<
 )
 ChartTooltipContent.displayName = "ChartTooltip"
 
-export const ChartLegend = RechartsPrimitive.Legend
+const ChartLegend = RechartsPrimitive.Legend
 
-export const ChartLegendContent = React.forwardRef<
+const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> &
   Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
@@ -354,3 +354,14 @@ function getPayloadConfigFromPayload(
     ? config[configLabelKey]
     : config[key as keyof typeof config]
 }
+
+const Chart = {
+  ChartContainer,
+  ChartStyle,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+}
+
+export default Chart

@@ -2,17 +2,11 @@
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 import CardComponents from "@/components/ui/card"
-import {
-    ChartConfig,
-    ChartContainer,
-    ChartLegend,
-    ChartLegendContent,
-    ChartTooltip,
-    ChartTooltipContent,
-} from "@/components/ui/chart"
+import Chart from "@/components/ui/chart"
 import { formatDate } from "@/utils/format"
 import { getBalanceForEveryMonth, getFirstTransferDateByYear, getLastTransferDateByYear } from "@/utils/transfer"
 import { Transfer } from "@/app/db/schema/transfer"
+import { ChartConfig } from "@/components/ui/chart"
 
 
 const chartConfig = {
@@ -38,7 +32,7 @@ export function StatisticsChart({ className, transfers }: { className?: string, 
                 <CardComponents.CardTitle className='capitalize'>{formatDate(firstTransferDate, { month: 'short', year: 'numeric' })} - {formatDate(lastTransferDate, { month: 'short', year: 'numeric' })}</CardComponents.CardTitle>
             </CardComponents.CardHeader>
             <CardComponents.CardContent className="px-0 pr-8">
-                <ChartContainer config={chartConfig}>
+                <Chart.ChartContainer config={chartConfig}>
                     <BarChart accessibilityLayer data={data}>
                         <CartesianGrid
                             vertical={false} />
@@ -52,16 +46,15 @@ export function StatisticsChart({ className, transfers }: { className?: string, 
                         />
                         <YAxis
                         />
-                        <ChartTooltip
+                        <Chart.ChartTooltip
                             cursor={false}
-                            content={<ChartTooltipContent
-                            />}
+                            content={<Chart.ChartTooltipContent />}
                         />
-                        <ChartLegend content={<ChartLegendContent />} />
+                        <Chart.ChartLegend content={<Chart.ChartLegendContent />} />
                         <Bar dataKey="income" fill="#379137" radius={2} />
                         <Bar dataKey="expense" fill="#DB3535" radius={2} />
                     </BarChart>
-                </ChartContainer>
+                </Chart.ChartContainer>
             </CardComponents.CardContent>
         </CardComponents.Card>
     )
