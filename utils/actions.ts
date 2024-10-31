@@ -10,13 +10,13 @@ import { auth } from '@/auth'
 
 export const addTransfer = async (amount: number, description: string, type: TransferType) => {
     const session = await auth()
-    if (!session?.user.id) {
+    if (!session?.user) {
         throw new Error('User not authenticated')
     }
     const headersList = headers()
     const pathname = headersList.get('x-invoke-path') || '/dashboard/transactions'
 
-    const transfer = await db.insert(transferTable).values({ id: uuid(), amount, description, type, userId: session?.user.id }).returning()
+    const transfer = await db.insert(transferTable).values({ id: uuid(), amount, description, type, userId: session.user.id }).returning()
     revalidatePath(pathname)
     return transfer[0].id
 }
