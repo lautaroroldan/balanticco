@@ -1,6 +1,6 @@
-import IncomeSwitch from './income-switch'
-import TransferBalanceCard from './transfer-balance-card'
-import Transfers, { TransferWithFormattedDate } from './transfers'
+import IncomeSwitch from '@/components/income-switch'
+import TransferBalanceCard from '@/components/transfer-balance-card'
+import Transfers, { TransferWithFormattedDate } from '@/components/transfers'
 import { TransferType } from '@/app/db/schema/transfer'
 import { fetchFilteredTransfers } from '@/utils/actions'
 

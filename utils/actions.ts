@@ -7,11 +7,11 @@ import { v4 as uuid } from 'uuid'
 import { headers } from 'next/headers'
 import { formatDate } from './format'
 
-export const addTransfer = async (amount: number, description: string, type: TransferType) => {
+export const addTransfer = async (amount: number, description: string, type: TransferType, userId: string) => {
     const headersList = headers()
     const pathname = headersList.get('x-invoke-path') || '/dashboard/transactions'
-    
-    const transfer = await db.insert(transferTable).values({ id: uuid(), amount, description, type }).returning()
+
+    const transfer = await db.insert(transferTable).values({ id: uuid(), amount, description, type, userId }).returning()
     revalidatePath(pathname)
     return transfer[0].id
 }
@@ -55,7 +55,7 @@ export const getBalanceByMonth = async (month: number, year: number) => {
         eq(sql`strftime('%Y', ${transferTable.date})`, year.toString())
     ))
     const balance = data.reduce((acc, transfer) => {
-        if(transfer.type === 'income') {
+        if (transfer.type === 'income') {
             return acc + transfer.amount
         } else {
             return acc - transfer.amount
@@ -96,7 +96,7 @@ export const fetchBalanceCardData = async (month: number, year: number) => {
 
 
 export const getFilteredTransfers = cache(async (type: TransferType) => {
-    if(type == null) {
+    if (type == null) {
         type = 'income'
     }
     const transfers = await db.select().from(transferTable).where(eq(transferTable.type, type))
@@ -108,7 +108,7 @@ export const getFilteredTransfers = cache(async (type: TransferType) => {
 
 
 export const fetchFilteredTransfers = async (type: TransferType) => {
-    if(type == null) {
+    if (type == null) {
         type = 'income'
     }
     const transfers = await db.select().from(transferTable).where(eq(transferTable.type, type)).orderBy(asc(transferTable.date))
