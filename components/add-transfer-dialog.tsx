@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import CheckboxGroup from '@/components/checkbox-group'
 import { TransferType } from '@/app/db/schema/transfer'
 import { Button } from '@/components/ui/button'
+import { addTransfer } from '@/utils/actions'
 
 interface AddTransferDialogProps {
     size: number
@@ -15,23 +16,20 @@ function AddTransferDialog({ size }: AddTransferDialogProps) {
 
     const [transferType, setTransferType] = useState<TransferType>('income')
     const [isLoading, setIsLoading] = useState(false)
-
+    const [open, setOpen] = useState(false)
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setIsLoading(true)
         const formData = new FormData(e.target as HTMLFormElement)
         const amount = formData.get('amount') as string
         const description = formData.get('description') as string
-        await fetch('/api/transfer', {
-            method: 'POST',
-            body: JSON.stringify({ amount, description, type: transferType })
-        })
+        await addTransfer(Number(amount), description, transferType)
         setIsLoading(false)
-
+        setOpen(false)
     }
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <button className='bg-gradient-to-r from-blue-gradient via-purple-gradient via-53% to-orange-gradient to-92% rounded-full p-1.5 flex items-center justify-center'>
                     <Plus size={size} color='#FFF' />

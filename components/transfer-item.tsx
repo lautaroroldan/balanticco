@@ -1,5 +1,6 @@
 import { TransferType } from '@/app/db/schema/transfer';
 import { formatCurrency } from '@/utils/format'
+import Image from 'next/image';
 import React from 'react'
 
 export interface TransferItemProps {
@@ -17,7 +18,7 @@ function TransferItem({ title, date, amount, type }: TransferItemProps) {
   return (
     <article className='bg-white rounded-lg flex py-1.5 pl-2 pr-3.5 justify-between items-center'>
       <section className='flex gap-2.5'>
-        <img src="/Ellipse.png" alt="transfer" />
+        <Image src="/Ellipse.png" alt="transfer" unoptimized width={40} height={40}/>
         <div className='flex flex-col justify-center'>
           <h2 className='text-xs font-semibold text-black capitalize'>{title}</h2>
           <h3 className='text-[10px] text-dark-gray font-normal'>{date}</h3>

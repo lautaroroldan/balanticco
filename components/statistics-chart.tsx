@@ -3,10 +3,9 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 import CardComponents from "@/components/ui/card"
 import Chart from "@/components/ui/chart"
-import { formatDate } from "@/utils/format"
-import { getBalanceForEveryMonth, getFirstTransferDateByYear, getLastTransferDateByYear } from "@/utils/transfer"
-import { Transfer } from "@/app/db/schema/transfer"
 import { ChartConfig } from "@/components/ui/chart"
+import { fetchStatisticsChartData } from "@/utils/actions"
+import { useEffect, useState } from "react"
 
 
 const chartConfig = {
@@ -20,17 +19,19 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function StatisticsChart({ className, transfers }: { className?: string, transfers: Transfer[] }) {
+export function StatisticsChart({ className }: { className?: string}) {
+    const [data, setData] = useState<{ month: string, income: number, expense: number }[]>([])
 
-    const firstTransferDate = getFirstTransferDateByYear(transfers, new Date().getFullYear())
-    const lastTransferDate = getLastTransferDateByYear(transfers, new Date().getFullYear())
+    useEffect(()=>{
+        async function fetchData(){
+            const fetchData = await fetchStatisticsChartData(new Date().getFullYear())
+            setData(fetchData)
+        }
+        fetchData()
+    },[])
 
-    const data = getBalanceForEveryMonth(transfers, new Date().getFullYear())
     return (
         <CardComponents.Card className={className}>
-            <CardComponents.CardHeader>
-                <CardComponents.CardTitle className='capitalize'>{formatDate(firstTransferDate, { month: 'short', year: 'numeric' })} - {formatDate(lastTransferDate, { month: 'short', year: 'numeric' })}</CardComponents.CardTitle>
-            </CardComponents.CardHeader>
             <CardComponents.CardContent className="px-0 pr-8">
                 <Chart.ChartContainer config={chartConfig}>
                     <BarChart accessibilityLayer data={data}>

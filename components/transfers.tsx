@@ -1,20 +1,24 @@
-import TransferItem from '@/components/transfer-item'
 import { Transfer } from '@/app/db/schema/transfer'
-import { formatDate } from '@/utils/format'
+import TransferItem from '@/components/transfer-item'
+import { getTransfers } from '@/utils/actions'
+
+export type TransferWithFormattedDate = Transfer & { date: string }
 
 interface TransfersProps {
-    data: Transfer[]
+    data?: TransferWithFormattedDate[]
     className?: string
     showTitle?: boolean
 }
 
-function Transfers({ className, showTitle = false, data }: TransfersProps) {
+async function Transfers({ className, showTitle = false, data }: TransfersProps) {
+
+    const transfers = data ?? await getTransfers()
     return (
         <main className={`flex flex-col gap-[22px] ${className}`}>
             {showTitle && <h2 className='text-base font-semibold text-black capitalize'>Transferencias</h2>}
             <section className='flex flex-col gap-2.5 overflow-y-auto'>
-                {data?.map((transfer) => (
-                    <TransferItem key={transfer.id} title={transfer.description} date={formatDate(transfer.date, { day: '2-digit', month: 'short', year: 'numeric', })} amount={transfer.amount} type={transfer.type} />
+                {transfers?.map((transfer) => (
+                    <TransferItem key={transfer.id} title={transfer.description} date={transfer.date} amount={transfer.amount} type={transfer.type} />
                 ))}
             </section>
         </main>
