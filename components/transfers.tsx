@@ -8,11 +8,12 @@ interface TransfersProps {
     data?: TransferWithFormattedDate[]
     className?: string
     showTitle?: boolean
+    userId: string
 }
 
-async function Transfers({ className, showTitle = false, data }: TransfersProps) {
+async function Transfers({ className, showTitle = false, data, userId }: TransfersProps) {
 
-    const transfers = data ?? await getTransfers()
+    const transfers = data ?? await getTransfers(userId)
     return (
         <main className={`flex flex-col gap-[22px] ${className}`}>
             {showTitle && <h2 className='text-base font-semibold text-black capitalize'>Transferencias</h2>}

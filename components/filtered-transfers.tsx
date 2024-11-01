@@ -6,9 +6,10 @@ import { fetchFilteredTransfers } from '@/utils/actions'
 
 interface FilteredTransfersProps {
     activeSwitch: TransferType
+    userId: string
 }
 
-async function FilteredTransfers({ activeSwitch, }: FilteredTransfersProps) {
+async function FilteredTransfers({ activeSwitch, userId }: FilteredTransfersProps) {
 
     const { transfers, firstDate, lastDate, amount } = await fetchFilteredTransfers(activeSwitch)
     return (
@@ -23,6 +24,7 @@ async function FilteredTransfers({ activeSwitch, }: FilteredTransfersProps) {
                 amount={amount}
             />
             <Transfers
+                userId={userId}
                 className='mt-5 max-h-[calc(100vh-48px-24px-158px-24px-52px-36px-80px-48px-20px-105px)]'
                 data={transfers as TransferWithFormattedDate[]}
             />

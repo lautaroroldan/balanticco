@@ -9,7 +9,6 @@ declare module "next-auth" {
    */
   interface Session {
     user: {
-      /** The user's postal address. */
       id: string
       /**
        * By default, TypeScript merges new interface properties and overwrites existing ones.
@@ -24,10 +23,6 @@ declare module "next-auth" {
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: DrizzleAdapter(db),
   secret: process.env.AUTH_SECRET,
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60 // 30 days
-  },
   providers: [Google({
     authorization: {
       params: {
@@ -37,4 +32,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     }
   })],
+  callbacks: {
+    async session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id
+      }
+      return session
+    }
+  }
 })

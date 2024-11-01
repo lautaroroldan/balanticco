@@ -19,16 +19,16 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function StatisticsChart({ className }: { className?: string}) {
+export function StatisticsChart({ className, userId }: { className?: string, userId: string }) {
     const [data, setData] = useState<{ month: string, income: number, expense: number }[]>([])
 
-    useEffect(()=>{
-        async function fetchData(){
-            const fetchData = await fetchStatisticsChartData(new Date().getFullYear())
+    useEffect(() => {
+        async function fetchData() {
+            const fetchData = await fetchStatisticsChartData(userId, new Date().getFullYear())
             setData(fetchData)
         }
         fetchData()
-    },[])
+    }, [])
 
     return (
         <CardComponents.Card className={className}>

@@ -7,11 +7,12 @@ import { v4 as uuid } from 'uuid'
 import { headers } from 'next/headers'
 import { formatDate } from './format'
 import { auth } from '@/auth'
+import { redirect } from 'next/navigation'
 
 export const addTransfer = async (amount: number, description: string, type: TransferType) => {
     const session = await auth()
-    if (!session?.user) {
-        throw new Error('User not authenticated')
+    if (!session) {
+        redirect('/login')
     }
     const headersList = headers()
     const pathname = headersList.get('x-invoke-path') || '/dashboard/transactions'
@@ -21,8 +22,11 @@ export const addTransfer = async (amount: number, description: string, type: Tra
     return transfer[0].id
 }
 
-export const getTransfers = cache(async () => {
-    const transfers = await db.select().from(transferTable).all()
+export const getTransfers = cache(async (userId: string) => {
+    if (!userId) {
+        redirect('/login')
+    }
+    const transfers = await db.select().from(transferTable).where(eq(transferTable.userId, userId))
     const transfersFormatted = transfers.map((transfer) => ({
         ...transfer,
         date: formatDate(new Date(transfer.date), { day: '2-digit', month: 'short', year: 'numeric' })
@@ -30,68 +34,86 @@ export const getTransfers = cache(async () => {
     return transfersFormatted
 }, ['get-transfers'], { revalidate: 3600, tags: ['get-transfers'] })
 
-export const getTotalExpenseByMonth = async (month: number, year: number) => {
-    const totalExpense = await db.select({ amount: transferTable.amount }).from(transferTable).where(and(
+export const getTotalExpenseByMonth = async (userId: string, month: number, year: number) => {
+    if (!userId) {
+        redirect('/login')
+    }
+    const totalExpense = await db.select({ amount: sql<number>`sum(${transferTable.amount})` }).from(transferTable).where(and(
         eq(sql`strftime('%m', ${transferTable.date})`, month.toString().padStart(2, '0')),
         eq(sql`strftime('%Y', ${transferTable.date})`, year.toString()),
         eq(transferTable.type, 'expense')
-    ))
-    const totalExpenseFormatted = totalExpense.reduce((acc, transfer) => {
-        return acc + transfer.amount
-    }, 0)
-    return totalExpenseFormatted
+    )).groupBy(transferTable.type)
+    if (totalExpense.length === 0) {
+        return 0
+    }
+    return totalExpense[0].amount
 }
 
-export const getTotalIncomeByMonth = async (month: number, year: number) => {
-    const totalIncome = await db.select({ amount: transferTable.amount }).from(transferTable).where(and(
+export const getTotalIncomeByMonth = async (userId: string, month: number, year: number) => {
+    if (!userId) {
+        redirect('/login')
+    }
+    const totalIncome = await db.select({ amount: sql<number>`sum(${transferTable.amount})` })
+        .from(transferTable)
+        .where(and(
+            eq(sql`strftime('%m', ${transferTable.date})`, month.toString().padStart(2, '0')),
+            eq(sql`strftime('%Y', ${transferTable.date})`, year.toString()),
+            eq(transferTable.type, 'income')
+        )).groupBy(transferTable.type)
+    if (totalIncome.length === 0) {
+        return 0
+    }
+    return totalIncome[0].amount
+}
+
+export const getBalanceByMonth = async (userId: string, month: number, year: number) => {
+    if (!userId) {
+        redirect('/login')
+    }
+    const data = await db.select({ type: transferTable.type, amount: sql<number>`sum(${transferTable.amount})` })
+        .from(transferTable)
+        .where(and(
+            eq(sql`strftime('%m', ${transferTable.date})`, month.toString().padStart(2, '0')),
+            eq(sql`strftime('%Y', ${transferTable.date})`, year.toString()),
+            eq(transferTable.userId, userId)
+        ))
+        .groupBy(sql`strftime('%m', ${transferTable.date})`)
+    if (data.length === 0) {
+        return 0
+    }
+    return data[0].amount
+}
+
+export const getFirstTransferDate = async (userId: string, month: number, year: number) => {
+    if (!userId) {
+        redirect('/login')
+    }
+    const [firstTransfer] = await db.select({ date: transferTable.date }).from(transferTable).where(and(
         eq(sql`strftime('%m', ${transferTable.date})`, month.toString().padStart(2, '0')),
         eq(sql`strftime('%Y', ${transferTable.date})`, year.toString()),
-        eq(transferTable.type, 'income')
-    ))
-    const totalIncomeFormatted = totalIncome.reduce((acc, transfer) => {
-        return acc + transfer.amount
-    }, 0)
-    return totalIncomeFormatted
-}
-
-export const getBalanceByMonth = async (month: number, year: number) => {
-    const data = await db.select({ amount: transferTable.amount, type: transferTable.type }).from(transferTable).where(and(
-        eq(sql`strftime('%m', ${transferTable.date})`, month.toString().padStart(2, '0')),
-        eq(sql`strftime('%Y', ${transferTable.date})`, year.toString())
-    ))
-    const balance = data.reduce((acc, transfer) => {
-        if (transfer.type === 'income') {
-            return acc + transfer.amount
-        } else {
-            return acc - transfer.amount
-        }
-    }, 0)
-    return balance
-}
-
-export const getFirstTransferDate = async (month: number, year: number) => {
-    const firstTransfer = await db.select({ date: transferTable.date }).from(transferTable).where(and(
-        eq(sql`strftime('%m', ${transferTable.date})`, month.toString().padStart(2, '0')),
-        eq(sql`strftime('%Y', ${transferTable.date})`, year.toString())
+        eq(transferTable.userId, userId)
     )).orderBy(asc(transferTable.date)).limit(1)
-    return firstTransfer[0].date
+    return firstTransfer.date
 }
 
-export const getLastTransferDate = async (month: number, year: number) => {
-    const lastTransfer = await db.select({ date: transferTable.date }).from(transferTable).where(and(
+export const getLastTransferDate = async (userId: string, month: number, year: number) => {
+    if (!userId) {
+        redirect('/login')
+    }
+    const [lastTransfer] = await db.select({ date: transferTable.date }).from(transferTable).where(and(
         eq(sql`strftime('%m', ${transferTable.date})`, month.toString().padStart(2, '0')),
         eq(sql`strftime('%Y', ${transferTable.date})`, year.toString())
     )).orderBy(desc(transferTable.date)).limit(1)
-    return lastTransfer[0].date
+    return lastTransfer.date
 }
 
-export const fetchBalanceCardData = async (month: number, year: number) => {
+export const fetchBalanceCardData = async (userId: string, month: number, year: number) => {
     return Promise.all([
-        getTotalExpenseByMonth(month, year),
-        getTotalIncomeByMonth(month, year),
-        getBalanceByMonth(month, year),
-        getFirstTransferDate(month, year),
-        getLastTransferDate(month, year)
+        getTotalExpenseByMonth(userId, month, year),
+        getTotalIncomeByMonth(userId, month, year),
+        getBalanceByMonth(userId, month, year),
+        getFirstTransferDate(userId, month, year),
+        getLastTransferDate(userId, month, year)
     ]).then(([totalExpense, totalIncome, balance, firstTransferDate, lastTransferDate]) => {
         const firstTransferDateFormatted = formatDate(new Date(firstTransferDate), { day: '2-digit', month: 'short', year: 'numeric' })
         const lastTransferDateFormatted = formatDate(new Date(lastTransferDate), { day: '2-digit', month: 'short', year: 'numeric' })
@@ -125,7 +147,10 @@ export const fetchFilteredTransfers = async (type: TransferType) => {
     return { transfers: formattedTransfers, firstDate: formattedTransfers[0].date, lastDate: formattedTransfers[formattedTransfers.length - 1].date, amount }
 }
 
-export const getBalanceForEveryMonth = cache(async (year: number) => {
+export const getBalanceForEveryMonth = cache(async (userId: string, year: number) => {
+    if (!userId) {
+        redirect('/login')
+    }
     const getUniqueMonths = async () => {
         const transfers = await db.select({ date: transferTable.date }).from(transferTable).where(eq(sql`strftime('%Y', ${transferTable.date})`, year.toString()))
         const months = transfers.map((transfer) => new Date(transfer.date).getMonth() + 1)
@@ -134,16 +159,19 @@ export const getBalanceForEveryMonth = cache(async (year: number) => {
     const uniqueMonths = await getUniqueMonths()
     const balances: { month: string, income: number, expense: number }[] = []
     for (let month = 1; month <= uniqueMonths.length; month++) {
-        const income = await getTotalIncomeByMonth(uniqueMonths[month - 1], year)
-        const expense = await getTotalExpenseByMonth(uniqueMonths[month - 1], year)
+        const income = await getTotalIncomeByMonth(userId, uniqueMonths[month - 1], year)
+        const expense = await getTotalExpenseByMonth(userId, uniqueMonths[month - 1], year)
         balances.push({ month: formatDate(new Date(year, uniqueMonths[month - 1] - 1, 1), { month: 'long' }), income, expense })
     }
     return balances
 }, ['get-balance-for-every-month'], { revalidate: 3600, tags: ['get-balance-for-every-month'] })
 
 
-export const fetchStatisticsChartData = async (year: number) => {
-    const data = await db.select({ date: transferTable.date, income: sql<number>`sum(${transferTable.amount}) filter (where ${transferTable.type} = 'income')`, expense: sql<number>`sum(${transferTable.amount}) filter (where ${transferTable.type} = 'expense')` }).from(transferTable).where(eq(sql`strftime('%Y', ${transferTable.date})`, year.toString())).groupBy(sql`strftime('%m', ${transferTable.date})`)
+export const fetchStatisticsChartData = async (userId: string, year: number) => {
+    const data = await db.select({ date: transferTable.date, income: sql<number>`sum(${transferTable.amount}) filter (where ${transferTable.type} = 'income')`, expense: sql<number>`sum(${transferTable.amount}) filter (where ${transferTable.type} = 'expense')` }).from(transferTable).where(and(
+        eq(sql`strftime('%Y', ${transferTable.date})`, year.toString()),
+        eq(transferTable.userId, userId)
+    )).groupBy(sql`strftime('%m', ${transferTable.date})`)
     const formattedData = data.map((item) => ({
         month: formatDate(new Date(item.date), { month: 'long' }),
         income: item.income,
