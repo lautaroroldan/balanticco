@@ -10,9 +10,10 @@ import { addTransfer } from '@/utils/actions'
 
 interface AddTransferDialogProps {
     size: number
+    userId: string
 }
 
-function AddTransferDialog({ size }: AddTransferDialogProps) {
+function AddTransferDialog({ size, userId }: AddTransferDialogProps) {
 
     const [transferType, setTransferType] = useState<TransferType>('income')
     const [isLoading, setIsLoading] = useState(false)
@@ -23,7 +24,7 @@ function AddTransferDialog({ size }: AddTransferDialogProps) {
         const formData = new FormData(e.target as HTMLFormElement)
         const amount = formData.get('amount') as string
         const description = formData.get('description') as string
-        await addTransfer(Number(amount), description, transferType)
+        await addTransfer(Number(amount), description, transferType, userId)
         setIsLoading(false)
         setOpen(false)
     }

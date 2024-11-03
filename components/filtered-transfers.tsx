@@ -11,7 +11,7 @@ interface FilteredTransfersProps {
 
 async function FilteredTransfers({ activeSwitch, userId }: FilteredTransfersProps) {
 
-    const { transfers, firstDate, lastDate, amount } = await fetchFilteredTransfers(activeSwitch)
+    const { transfers, firstDate, lastDate, amount } = await fetchFilteredTransfers(activeSwitch, userId)
     return (
         <>
             <IncomeSwitch

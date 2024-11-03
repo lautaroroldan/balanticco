@@ -5,8 +5,11 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 import AddTransferDialog from '@/components/add-transfer-dialog'
 
+interface MobileNavbarProps {
+    userId: string
+}
 
-function MobileNavbar() {
+function MobileNavbar({ userId }: MobileNavbarProps) {
 
     const pathname = usePathname()
     const isActive = (path: string) => pathname === path
@@ -21,7 +24,7 @@ function MobileNavbar() {
                 <Link href='/dashboard/transactions'>
                     <ArrowRightLeft size={size} color={isActive('/dashboard/transactions') ? '#956EDB' : '#ABABAB'} />
                 </Link>
-                <AddTransferDialog size={size} />
+                <AddTransferDialog size={size} userId={userId} />
                 <Link href='/dashboard/statistics'>
                     <ChartNoAxesColumn size={size} color={isActive('/dashboard/statistics') ? '#956EDB' : '#ABABAB'} />
                 </Link>

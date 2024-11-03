@@ -28,7 +28,7 @@ export function StatisticsChart({ className, userId }: { className?: string, use
             setData(fetchData)
         }
         fetchData()
-    }, [])
+    }, [userId])
 
     return (
         <CardComponents.Card className={className}>
