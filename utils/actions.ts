@@ -93,6 +93,9 @@ export const getFirstTransferDate = async (userId: string, month: number, year: 
         eq(sql`strftime('%Y', ${transferTable.date})`, year.toString()),
         eq(transferTable.userId, userId)
     )).orderBy(asc(transferTable.date)).limit(1)
+    if (!firstTransfer) {
+        return null
+    }
     return firstTransfer.date
 }
 
@@ -104,6 +107,9 @@ export const getLastTransferDate = async (userId: string, month: number, year: n
         eq(sql`strftime('%m', ${transferTable.date})`, month.toString().padStart(2, '0')),
         eq(sql`strftime('%Y', ${transferTable.date})`, year.toString())
     )).orderBy(desc(transferTable.date)).limit(1)
+    if (!lastTransfer) {
+        return null
+    }
     return lastTransfer.date
 }
 
@@ -115,8 +121,13 @@ export const fetchBalanceCardData = async (userId: string, month: number, year: 
         getFirstTransferDate(userId, month, year),
         getLastTransferDate(userId, month, year)
     ]).then(([totalExpense, totalIncome, balance, firstTransferDate, lastTransferDate]) => {
-        const firstTransferDateFormatted = formatDate(new Date(firstTransferDate), { day: '2-digit', month: 'short', year: 'numeric' })
-        const lastTransferDateFormatted = formatDate(new Date(lastTransferDate), { day: '2-digit', month: 'short', year: 'numeric' })
+        const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' }
+        if (firstTransferDate == null || lastTransferDate == null) {
+            firstTransferDate = formatDate(new Date(), options)
+            lastTransferDate = formatDate(new Date(), options)
+        }
+        const firstTransferDateFormatted = formatDate(new Date(firstTransferDate), options)
+        const lastTransferDateFormatted = formatDate(new Date(lastTransferDate), options)
         return { totalExpense, totalIncome, balance, firstTransferDate: firstTransferDateFormatted, lastTransferDate: lastTransferDateFormatted }
     })
 }
