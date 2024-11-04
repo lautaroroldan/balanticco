@@ -135,6 +135,11 @@ export const fetchFilteredTransfers = async (type: TransferType, userId: string)
         eq(transferTable.type, type),
         eq(transferTable.userId, userId)
     )).orderBy(asc(transferTable.date))
+    if (transfers.length === 0) {
+        const firstDate = formatDate(new Date(), { day: '2-digit', month: 'short', year: 'numeric' })
+        const lastDate = formatDate(new Date(), { day: '2-digit', month: 'short', year: 'numeric' })
+        return { transfers: [], firstDate, lastDate, amount: 0 }
+    }
     const amount = transfers.reduce((acc, transfer) => acc + transfer.amount, 0)
     const formattedTransfers = transfers.map((transfer) => ({
         ...transfer,
