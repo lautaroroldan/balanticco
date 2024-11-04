@@ -30,8 +30,19 @@ export function StatisticsChart({ className, userId }: { className?: string, use
         fetchData()
     }, [userId])
 
+
+    const getChartTitle = () => {
+        if (data.length === 0) {
+            return "No hay datos para mostrar"
+        }
+        return `${data[0].month} - ${data[data.length - 1].month}`
+    }
+
     return (
         <CardComponents.Card className={className}>
+            <CardComponents.CardHeader>
+                <CardComponents.CardTitle className="capitalize">{getChartTitle()}</CardComponents.CardTitle>
+            </CardComponents.CardHeader>
             <CardComponents.CardContent className="px-0 pr-8">
                 <Chart.ChartContainer config={chartConfig}>
                     <BarChart accessibilityLayer data={data}>
