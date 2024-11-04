@@ -4,8 +4,6 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import CardComponents from "@/components/ui/card"
 import Chart from "@/components/ui/chart"
 import { ChartConfig } from "@/components/ui/chart"
-import { fetchStatisticsChartData } from "@/utils/actions"
-import { useEffect, useState } from "react"
 
 
 const chartConfig = {
@@ -19,17 +17,12 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function StatisticsChart({ className, userId }: { className?: string, userId: string }) {
-    const [data, setData] = useState<{ month: string, income: number, expense: number }[]>([])
+interface StatisticsChartProps {
+    className?: string
+    data: { month: string, income: number, expense: number }[]
+}
 
-    useEffect(() => {
-        async function fetchData() {
-            const fetchData = await fetchStatisticsChartData(userId, new Date().getFullYear())
-            setData(fetchData)
-        }
-        fetchData()
-    }, [userId])
-
+export function StatisticsChart({ className, data }: StatisticsChartProps) {
 
     const getChartTitle = () => {
         if (data.length === 0) {
