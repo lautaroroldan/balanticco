@@ -9,7 +9,11 @@ import { formatDate } from './format'
 
 export const addTransfer = async (amount: number, description: string, type: TransferType, userId: string) => {
     const headersList = headers()
-    const pathname = headersList.get('x-invoke-path') || '/dashboard/transactions'
+    const pathname = headersList.get('x-invoke-path') || '/dashboard/home'
+
+    if (type == 'expense') {
+        amount = -amount
+    }
 
     const transfer = await db.insert(transferTable).values({ id: uuid(), amount, description, type, userId }).returning()
     revalidatePath(pathname)

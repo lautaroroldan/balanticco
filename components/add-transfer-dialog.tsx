@@ -7,6 +7,8 @@ import CheckboxGroup from '@/components/checkbox-group'
 import { TransferType } from '@/app/db/schema/transfer'
 import { Button } from '@/components/ui/button'
 import { addTransfer } from '@/utils/actions'
+import { TransferSchema } from '@/lib/zod'
+import { toast } from "sonner"
 
 interface AddTransferDialogProps {
     size: number
@@ -18,15 +20,30 @@ function AddTransferDialog({ size, userId }: AddTransferDialogProps) {
     const [transferType, setTransferType] = useState<TransferType>('income')
     const [isLoading, setIsLoading] = useState(false)
     const [open, setOpen] = useState(false)
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+
+    const handleSubmit = async (formData: FormData) => {
         setIsLoading(true)
-        const formData = new FormData(e.target as HTMLFormElement)
-        const amount = formData.get('amount') as string
-        const description = formData.get('description') as string
-        await addTransfer(Number(amount), description, transferType, userId)
-        setIsLoading(false)
-        setOpen(false)
+        const newTransfer = {
+            amount: Number(formData.get('amount')),
+            description: formData.get('description'),
+            transferType,
+            userId
+        }
+        const result = TransferSchema.safeParse(newTransfer)
+        if (!result.success) {
+            toast.error('Error al agregar la operación', { description: result.error.issues.map(issue => issue.message).join(', ') })
+            setIsLoading(false)
+            return
+        }
+        try {
+            const { amount, description, transferType } = result.data
+            await addTransfer(amount, description, transferType, userId)
+        } catch (error) {
+            toast.error('Error al agregar la operación')
+        } finally {
+            setIsLoading(false)
+            setOpen(false)
+        }
     }
 
     return (
@@ -43,7 +60,7 @@ function AddTransferDialog({ size, userId }: AddTransferDialogProps) {
                         Completa los campos para agregar una operación
                     </DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+                <form action={handleSubmit} className='flex flex-col gap-4'>
                     <div className="grid flex-1 gap-4">
                         <Input
                             id="description"

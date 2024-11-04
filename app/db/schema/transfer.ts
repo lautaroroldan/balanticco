@@ -4,6 +4,10 @@ import { sql } from "drizzle-orm";
 import { users } from "./user";
 
 export type TransferType = 'income' | 'expense'
+export enum TransferTypeEnum {
+    INCOME = 'income',
+    EXPENSE = 'expense'
+}
 
 export interface Transfer {
     id: string
